@@ -1,9 +1,13 @@
 <h1>Meditation #2</h1>
 <h2>by Maceo</h2>
-For this meditation I drew inspiration from an app I use called Moises. I originally downloaded it to find chords for lesser known songs that I enjoyed that I wanted to play on guitar. However, it quickly became apparent that the AI model was not as accurate as I would have liked. Still, the app had other benefits including a metronome to speed up or slow down the audio files, a reverser, and my favorite part of the app, a sound isolator for vocals, drums, bass, and melody. I personally enjoy removing vocals from many of my favorite songs and just listening to the beat and experimenting with it using the metronome and reverse options.
+For this meditation I drew inspiration from an app I use called Moises. I originally downloaded it to find chords for lesser known songs that I enjoyed that I wanted to play on guitar. However, it quickly became apparent that the AI model was not as accurate as I would have liked. Still, the app had other benefits including a metronome to adjust playback speed, a reverser, and my favorite tool, a sound isolator for vocals, drums, bass, and melody. I enjoy removing vocals from many of my favorite songs, just listening to the beat, and experimenting with it using the metronome and reverse options.
 
 <p>
-For the meditation, this is exactly what I planned to recreate. I made my playback buttons first for speeding up and slowing down and then created a reverse button. After researching techniques to remove vocals though, it became apparent that I would need to use advanced coding or API's. With this I wanted to push the meditation a bit further so I decided to look into visual effects. Initially I had planned to make a simple color changer that would change the background depending on the frequency. I first tried to do this on my own put hit a road block and went to ChatGPT. What it gave me back was much more than I had wanted, but I ended up liking it a lot and stuck with it as the color transitions appeared much more seamless than the version I was going to make.
+For the meditation, this is exactly what I planned to recreate. I made my playback buttons first for speeding up and slowing down and then created a reverse button. When I looked into ways to remove vocals, I realized it would require more advanced coding or APIs. So, I decided to take the project in a different direction by exploring visual effects instead. Initially I had planned to make a simple color changer that would change the background depending on the frequency. I first tried to do this on my own put hit a road block and went to ChatGPT. What it gave me back was much more than I had wanted, but I ended up liking it a lot and stuck with it as the color transitions appeared much more seamless than the version I was going to make.
+
+<p>
+  https://chatgpt.com/share/68f06fd4-97f8-8009-af7e-676095876c9d
+</p>
 </p>
 
 
@@ -15,7 +19,7 @@ For the meditation, this is exactly what I planned to recreate. I made my playba
 <script>
   
 /* global nn, Tone, viz */
-const song = 'talk.mp3'
+const song = 'Rozay 09 Type Beat.mp3'
 const player = new Tone.Player(song)
 
 player.toDestination()
@@ -65,19 +69,19 @@ player.connect(spec)
 const analyser = new Tone.Analyser('fft', 256)
 player.connect(analyser)
   
-function freqToColor() {
+function ColorChanger() {
   const values = analyser.getValue()
   const average = values.reduce((a, b) => a + b, 0) / values.length
   const normalized = Math.min(Math.max((average + 100) / 100, 0), 1)
-  const color = normalized * 360
+  const color = normalized * 400
 
   // Apply the color
-  nn.get('body').css('background', `hsl(${color}, 80%, 50%)`)
+  nn.get('body').css('background', `hsl(${color}, 70%, 50%)`)
 
-  requestAnimationFrame(freqToColor)
+  requestAnimationFrame(ColorChanger)
 }
   
-freqToColor()
+ColorChanger()
   
 
 </script>
