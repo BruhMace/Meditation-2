@@ -3,10 +3,10 @@
 For this meditation I drew inspiration from an app I use called Moises. I originally downloaded it to find chords for lesser known songs that I enjoyed that I wanted to play on guitar. However, it quickly became apparent that the AI model was not as accurate as I would have liked. Still, the app had other benefits including a metronome to adjust playback speed, a reverser, and my favorite tool, a sound isolator for vocals, drums, bass, and melody. I enjoy removing vocals from many of my favorite songs, just listening to the beat, and experimenting with it using the metronome and reverse options.
 
 <p>
-For the meditation, this is exactly what I planned to recreate. I made my playback buttons first for speeding up and slowing down and then created a reverse button. When I looked into ways to remove vocals, I realized it would require more advanced coding or APIs. So, I decided to take the project in a different direction by exploring visual effects instead. Initially I had planned to make a simple color changer that would change the background depending on the frequency. I first tried to do this on my own put hit a road block and went to ChatGPT. What it gave me back was much more than I had wanted, but I ended up liking it a lot and stuck with it as the color transitions appeared much more seamless than the version I was going to make.
+For the meditation, this is exactly what I planned to recreate. I made my playback buttons first for speeding up and slowing down and then created a reverse button. When I looked into ways to remove vocals, I realized it would require more advanced coding or APIs. 
 
 <p>
-  https://chatgpt.com/share/68f06fd4-97f8-8009-af7e-676095876c9d
+
 </p>
 </p>
 
@@ -22,8 +22,12 @@ For the meditation, this is exactly what I planned to recreate. I made my playba
 const song = 'Rozay 09 Type Beat.mp3'
 const player = new Tone.Player(song)
 
+const vol = new Tone.Gain(1)
+vol.toDestination()
+
 player.toDestination()
 player.playbackRate = 1
+player.connect(vol)
 
 // UI (to trigger play function)
 nn.create('button')
@@ -63,25 +67,37 @@ nn.create('button')
   
 
 // visualizations
-const spec = viz.createSpectrum({ range: [0, 8000] })
+const spec = viz.createSpectrum({ range: [0, 5000] })
 player.connect(spec)
   
+
 const analyser = new Tone.Analyser('fft', 256)
 player.connect(analyser)
+
+
+const button = nn.create('button').addTo('Body')
   
-function ColorChanger() {
-  const values = analyser.getValue()
-  const average = values.reduce((a, b) => a + b, 0) / values.length
-  const normalized = Math.min(Math.max((average + 100) / 100, 0), 1)
-  const color = normalized * 400
-
-  // Apply the color
-  nn.get('body').css('background', `hsl(${color}, 70%, 50%)`)
-
-  requestAnimationFrame(ColorChanger)
+function UpdateVal() {
+  const val = analyser.getValue() 
+  const avg = val.reduce((a, b) => a + b, 0) / val.length
+  button.content(avg.toFixed(3))
+  requestAnimationFrame(UpdateVal)
+  
+  if (avg < -90) {
+    document.body.style.background = 'red'
+  } else if (avg < -85) {
+    document.body.style.background = 'orange'
+  } else if (avg < -80) {
+    document.body.style.background = 'yellow'
+  } else if (avg < -75) {
+    document.body.style.background = 'green'
+  } else if (avg < -70) {
+    document.body.style.background = 'blue'
+  } else if (avg < -65) {
+    document.body.style.background = 'purple'
+    
+  }
 }
+UpdateVal()
   
-ColorChanger()
-  
-
 </script>
